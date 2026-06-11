@@ -8,13 +8,15 @@ source "${ROOT_DIR}/scripts/release-targets.sh"
 
 build_one() {
   local tag="$1" build_version="$2" goos="$3" goarch="$4" goarm="$5" label="$6"
-  local pkg stage bin
+  local pkg stage bin bin_xunfei
 
   pkg="ds2api_${tag}_${label}"
   stage="dist/${pkg}"
   bin="ds2api"
+  bin_xunfei="ds2api-xunfei"
   if [[ "$goos" == "windows" ]]; then
     bin="ds2api.exe"
+    bin_xunfei="ds2api-xunfei.exe"
   fi
 
   echo "[release-archives] building ${label}"
@@ -24,9 +26,13 @@ build_one() {
   if [[ "$goarm" == "-" ]]; then
     CGO_ENABLED=0 GOOS="$goos" GOARCH="$goarch" \
       go build -buildvcs=false -trimpath -ldflags="-s -w -X ds2api/internal/version.BuildVersion=${build_version}" -o "${stage}/${bin}" ./cmd/ds2api
+    CGO_ENABLED=0 GOOS="$goos" GOARCH="$goarch" \
+      go build -buildvcs=false -trimpath -ldflags="-s -w" -o "${stage}/${bin_xunfei}" ./cmd/ds2api-xunfei
   else
     CGO_ENABLED=0 GOOS="$goos" GOARCH="$goarch" GOARM="$goarm" \
       go build -buildvcs=false -trimpath -ldflags="-s -w -X ds2api/internal/version.BuildVersion=${build_version}" -o "${stage}/${bin}" ./cmd/ds2api
+    CGO_ENABLED=0 GOOS="$goos" GOARCH="$goarch" GOARM="$goarm" \
+      go build -buildvcs=false -trimpath -ldflags="-s -w" -o "${stage}/${bin_xunfei}" ./cmd/ds2api-xunfei
   fi
 
   cp config.example.json .env.example LICENSE README.MD README.en.md "${stage}/"

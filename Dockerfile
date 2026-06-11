@@ -45,6 +45,7 @@ CMD ["/usr/local/bin/ds2api"]
 
 FROM runtime-base AS runtime-from-source
 COPY --from=go-builder /out/ds2api /usr/local/bin/ds2api
+COPY --from=go-builder /out/ds2api-xunfei /usr/local/bin/ds2api-xunfei
 
 COPY --from=go-builder --chown=ds2api:ds2api /app/config.example.json /app/config.example.json
 COPY --from=webui-builder --chown=ds2api:ds2api /app/static/admin /app/static/admin
@@ -65,11 +66,13 @@ RUN set -eux; \
     test -n "${PKG_DIR}"; \
     mkdir -p /out/static; \
     cp "${PKG_DIR}/ds2api" /out/ds2api; \
+    cp "${PKG_DIR}/ds2api-xunfei" /out/ds2api-xunfei; \
     cp "${PKG_DIR}/config.example.json" /out/config.example.json; \
     cp -R "${PKG_DIR}/static/admin" /out/static/admin
 
 FROM runtime-base AS runtime-from-dist
 COPY --from=dist-extract /out/ds2api /usr/local/bin/ds2api
+COPY --from=dist-extract /out/ds2api-xunfei /usr/local/bin/ds2api-xunfei
 
 COPY --from=dist-extract --chown=ds2api:ds2api /out/config.example.json /app/config.example.json
 COPY --from=dist-extract --chown=ds2api:ds2api /out/static/admin /app/static/admin
