@@ -27,7 +27,7 @@ func fakeXunfeiWS(t *testing.T, framesToSend [][]byte) (string, <-chan []byte) {
 		if err != nil {
 			return
 		}
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		_, msg, err := c.ReadMessage()
 		if err == nil {
 			inbound <- msg

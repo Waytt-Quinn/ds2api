@@ -83,7 +83,7 @@ func (h *Handler) ChatCompletions(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "xunfei completion: "+err.Error(), http.StatusBadGateway)
 		return
 	}
-	defer src.Close()
+	defer func() { _ = src.Close() }()
 
 	if stdReq.Stream {
 		h.streamResponse(w, r, src, stdReq)
@@ -260,14 +260,14 @@ func writeJSON(w http.ResponseWriter, status int, body any) {
 
 func writeSSE(w http.ResponseWriter, event string, data any) {
 	if event == "done" {
-		fmt.Fprintf(w, "data: %s\n\n", data)
+		_, _ = fmt.Fprintf(w, "data: %s\n\n", data)
 		return
 	}
 	if event != "" {
-		fmt.Fprintf(w, "event: %s\n", event)
+		_, _ = fmt.Fprintf(w, "event: %s\n", event)
 	}
 	b, _ := json.Marshal(data)
-	fmt.Fprintf(w, "data: %s\n\n", b)
+	_, _ = fmt.Fprintf(w, "data: %s\n\n", b)
 }
 
 // callsToOpenAI converts the toolcall package's ParsedToolCall

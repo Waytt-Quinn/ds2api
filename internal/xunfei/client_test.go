@@ -29,7 +29,7 @@ func startFakeWS(t *testing.T, framesToSend [][]byte) (string, <-chan []byte) {
 			t.Errorf("upgrade: %v", err)
 			return
 		}
-		defer c.Close()
+		defer func() { _ = c.Close() }()
 		// Read the one request the client sends.
 		_, msg, err := c.ReadMessage()
 		if err != nil {
@@ -106,7 +106,7 @@ func TestCompletionEndToEnd(t *testing.T) {
 		_, authURL := BuildAuthURL(cfg.Host, cfg.Path, cfg.APIKey, cfg.APISecret)
 		t.Fatalf("Completion: %v\nauth URL: %q", err, authURL)
 	}
-	defer src.Close()
+	defer func() { _ = src.Close() }()
 
 	// Drain the inbound channel to confirm the request was sent.
 	select {
