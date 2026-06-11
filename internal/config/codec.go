@@ -140,6 +140,10 @@ func (c *Config) UnmarshalJSON(b []byte) error {
 			if err := json.Unmarshal(v, &c.VercelSyncTime); err != nil {
 				return fmt.Errorf("invalid field %q: %w", k, err)
 			}
+		case "xunfei":
+			if err := json.Unmarshal(v, &c.Xunfei); err != nil {
+				return fmt.Errorf("invalid field %q: %w", k, err)
+			}
 		default:
 			var anyVal any
 			if err := json.Unmarshal(v, &anyVal); err == nil {

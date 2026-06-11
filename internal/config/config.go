@@ -23,7 +23,26 @@ type Config struct {
 	Vercel            VercelConfig            `json:"vercel,omitempty"`
 	VercelSyncHash    string                  `json:"_vercel_sync_hash,omitempty"`
 	VercelSyncTime    int64                   `json:"_vercel_sync_time,omitempty"`
+	Xunfei            XunfeiConfig            `json:"xunfei,omitempty"`
 	AdditionalFields  map[string]any          `json:"-"`
+}
+
+// XunfeiConfig holds settings for the optional Xunfei WSS backend.
+// When Host is empty, the xunfei backend is disabled and the deepseek
+// path is used as before. Env vars (XUNFEI_API_HOST, XUNFEI_COOKIE,
+// XUNFEI_INSECURE_SKIP_VERIFY, etc.) override the values here at
+// startup; the file is the source of truth for static deployment
+// config.
+type XunfeiConfig struct {
+	Host               string `json:"host,omitempty"`
+	Path               string `json:"path,omitempty"`
+	PathPrefix         string `json:"path_prefix,omitempty"`
+	APIKey             string `json:"api_key,omitempty"`
+	APISecret          string `json:"api_secret,omitempty"`
+	Domain             string `json:"domain,omitempty"`
+	Cookie             string `json:"cookie,omitempty"`
+	InsecureSkipVerify bool   `json:"insecure_skip_verify,omitempty"`
+	ContextEnabled     *bool  `json:"context_enabled,omitempty"`
 }
 
 type Account struct {

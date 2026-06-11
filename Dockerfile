@@ -21,6 +21,14 @@ RUN set -eux; \
     BUILD_VERSION_RESOLVED="${BUILD_VERSION:-}"; \
     if [ -z "${BUILD_VERSION_RESOLVED}" ] && [ -f VERSION ]; then BUILD_VERSION_RESOLVED="$(cat VERSION | tr -d "[:space:]")"; fi; \
     CGO_ENABLED=0 GOOS="${GOOS}" GOARCH="${GOARCH}" go build -buildvcs=false -ldflags="-s -w -X ds2api/internal/version.BuildVersion=${BUILD_VERSION_RESOLVED}" -o /out/ds2api ./cmd/ds2api
+# ds2api-xunfei is the standalone WSS-to-OpenAI bridge for the
+# internal Xunfei gateway. It exposes /v1/chat/completions on a
+# separate port and is built alongside the main binary so the
+# single image can run both roles if needed.
+RUN set -eux; \
+    GOOS="${TARGETOS:-$(go env GOOS)}"; \
+    GOARCH="${TARGETARCH:-$(go env GOARCH)}"; \
+    CGO_ENABLED=0 GOOS="${GOOS}" GOARCH="${GOARCH}" go build -buildvcs=false -ldflags="-s -w" -o /out/ds2api-xunfei ./cmd/ds2api-xunfei
 
 FROM busybox:1.36.1-musl AS busybox-tools
 

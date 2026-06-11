@@ -68,5 +68,17 @@
   },
   "auto_delete": {
     "mode": "none"
+  },
+  "_xunfei_standalone": {
+    "_comment": "Configuration for the ds2api-xunfei standalone server (a separate binary). Most fields here are also read from env vars: XUNFEI_API_HOST, XUNFEI_API_PATH, XUNFEI_API_KEY, XUNFEI_API_SECRET, XUNFEI_DOMAIN, XUNFEI_COOKIE, XUNFEI_INSECURE_SKIP_VERIFY, XUNFEI_CONTEXT_ENABLED, DS2API_XUNFEI_PORT. The standalone server does NOT use this config.json — env vars are the source of truth. This block is documentation only.",
+    "host": "ai-agent",
+    "path": "/agent/skybox/api/v1/chat",
+    "path_prefix": "",
+    "api_key": "your-app-id",
+    "api_secret": "your-hmac-secret",
+    "domain": "DeepSeek-V3",
+    "cookie": "",
+    "insecure_skip_verify": true,
+    "context_enabled": true
   }
 }
